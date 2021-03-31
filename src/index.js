@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
+const multer = require('multer');
 
 //inicializaciones
 const app = express();
@@ -24,6 +25,7 @@ app.set('view engine', 'ejs');
 //middlewares
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended: false}));
+app.use(multer({dest: path.join(__dirname, 'public/images/uploads')}).single('image'));
 app.use(session({
     secret: 'mysecretsessioncalramon',
     resave: false,

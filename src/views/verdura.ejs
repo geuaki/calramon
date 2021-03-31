@@ -1,0 +1,42 @@
+<%- layout('layouts/main.ejs') %>
+<h1>Verdura</h1>
+<div class="container p-4">
+    <% if(products.length == 0) { %>
+    
+        <div class="alert alert-danger">
+            <p>Ara mateix no tenim productes de Verdura, torni mes tard o explori altres seccions.</p>
+        </div>
+    
+    <% } else { %>
+    <div class="row">
+        <div class="card-columns">
+            <% products.forEach(function(product) {%>
+                <div class="card">
+                    <img src="<%= product.image.path %>" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= product.name %></h5>
+                        <p>Unitat: <%= product.weight %></p>
+                        <p>Preu: <%= product.price %>€</p>
+                        <p>Quantitat: <%= product.quantity %> restants</p>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[2]">
+                                  <span class="glyphicon glyphicon-minus"></span>
+                                </button>
+                            </span>
+                            <input type="text" name="quant[2]" class="form-control input-number" value="10" min="1" max="100">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[2]">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </span>
+                        </div>
+                        <button type="button" class="btn btn-primary mt-4" >Afegir al cistell</button>
+                    </div>
+                </div>
+            <% }) %>
+
+        </div>
+    </div>
+    <% } %>
+</div>
