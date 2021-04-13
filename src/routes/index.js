@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { unlink } = require('fs-extra');
+const path = require('path');
 
 const passport = require('passport');
 
@@ -61,6 +63,31 @@ router.get('/llegums', async (req, res, next) =>{
 router.get('/oli', async (req, res, next) =>{
     const products = await Product.find({"category":"oli"});
     res.render('oli', { products });
+});
+
+router.get('/producte/:id', async (req, res, next) =>{
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('perfilproducte', { product });
+});
+
+router.get('/producte/:id/delete', async (req, res, next) =>{
+    const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
+    await unlink(path.resolve('./src/public' + product.image.path));
+    res.redirect('/' + product.category);
+});
+
+router.get('/producte/:id/update', async (req, res, next) =>{
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('modificarproducte', { product });
+});
+
+router.put('/producte/updateone/:id', async (req, res, next) =>{
+    const { name, unit, weight, price, quantity, category, description } = req.body;
+    await Product.findByIdAndUpdate(req.params.id, {name, unit, weight, price, quantity, category, description});
+    res.redirect("/");
 });
 
 function isAuthenticated(req, res, next) {
