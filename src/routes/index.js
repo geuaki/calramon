@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
 const passport = require('passport');
 
 const Product = require('../models/product');
@@ -34,10 +33,6 @@ router.get('/logout', (req, res, next) => {
     res.redirect('/');
 });
 
-router.get('/profile',  isAuthenticated, (req, res, next) =>{
-    res.render('profile');
-});
-
 router.get('/fruita', async (req, res, next) =>{
     const products = await Product.find({"category":"fruita"});
     res.render('fruita', { products });
@@ -63,10 +58,59 @@ router.get('/oli', async (req, res, next) =>{
     res.render('oli', { products });
 });
 
+router.use((req, res, next) => {
+    isAuthenticated(req, res, next);
+}); 
+
+router.get('/profile', (req, res, next) =>{
+    res.render('profile');
+});
+
+/* router.use((req, res, next) => {
+    isAdmin(req, res, next);
+}); */
+
+router.get('/adminProducts', async (req, res, next) => {
+    const products = await Product.find()
+    res.render('adminProducts', { products });
+});
+
+router.post('/add', async (req, res) => {
+    const product = new Product(req.body);
+    await product.save();
+    res.redirect("/adminProducts");
+});
+
+router.get('/edit/:id', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('editProduct', { product });
+});
+
+router.post('/edit/:id', async (req, res) => {
+    const { id } = req.params;
+    await Product.update({_id: id}, req.body)
+    res.redirect("/adminProducts");
+});
+
+router.get('/delete/:id', async (req, res) => {
+    const { id } = req.params;
+    await Product.remove({_id: id});
+    res.redirect("/adminProducts");
+});
+
 function isAuthenticated(req, res, next) {
     if(req.isAuthenticated()){
         return next();
     }
     res.redirect('/');
 };
+
+/* function isAdmin(req, res, next) {
+    if(req.user.isAdmin === true){
+        return next();
+    }
+    res.redirect('/');
+} */
+
 module.exports = router;

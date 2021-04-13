@@ -15,16 +15,16 @@
                     <img src="<%= product.image.path %>" class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title"><%= product.name %></h5>
-                        <p>Unitat: <%= product.weight %></p>
+                        <!-- <p>Unitat: <%= product.weight %></p> -->
                         <p>Preu: <%= product.price %>€</p>
                         <p>Quantitat: <%= product.quantity %> restants</p>
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[2]">
-                                  <span class="glyphicon glyphicon-minus"></span>
+                                    <span class="glyphicon glyphicon-minus"></span>
                                 </button>
                             </span>
-                            <input type="text" name="quant[2]" class="form-control input-number" value="10" min="1" max="100">
+                            <input type="text" name="quant[2]" class="form-control input-number" value="1" min="1" max="100">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[2]">
                                     <span class="glyphicon glyphicon-plus"></span>
