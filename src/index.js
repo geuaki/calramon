@@ -9,6 +9,7 @@ const multer = require('multer');
 const uuid = require('uuid');
 
 const indexRoutes = require('./routes/index');
+const methodOverride = require ("method-override");
 
 //inicializaciones
 const app = express();
@@ -28,6 +29,7 @@ app.set('view engine', 'ejs');
 //middlewares
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended: false}));
+app.use(methodOverride("_method"));
 app.use(multer({dest: path.join(__dirname, 'public/images/uploads')}).single('image'));
 app.use(session({
     secret: 'mysecretsessioncalramon',

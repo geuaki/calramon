@@ -3,7 +3,9 @@ const { Schema } = mongoose;
 
 const productSchema = new Schema({
     name: String,
-    weight: String,
+    weight: Number,
+    unit: String,
+    isKilogram: Boolean,
     price: Number,
     quantity: Number,
     category: String,
