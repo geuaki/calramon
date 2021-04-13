@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< HEAD
-=======
 const { unlink } = require('fs-extra');
 const path = require('path');
 
->>>>>>> 01827e77e2dab58fa746b5546f0407f921c9e655
 const passport = require('passport');
 
 const Product = require('../models/product');
@@ -64,6 +61,12 @@ router.get('/oli', async (req, res, next) =>{
     res.render('oli', { products });
 });
 
+router.get('/producte/:id', async (req, res, next) =>{
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('perfilproducte', { product });
+});
+
 router.use((req, res, next) => {
     isAuthenticated(req, res, next);
 }); 
@@ -103,12 +106,6 @@ router.get('/delete/:id', async (req, res) => {
     const { id } = req.params;
     await Product.remove({_id: id});
     res.redirect("/adminProducts");
-});
-
-router.get('/producte/:id', async (req, res, next) =>{
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    res.render('perfilproducte', { product });
 });
 
 router.get('/producte/:id/delete', async (req, res, next) =>{
