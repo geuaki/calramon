@@ -1,0 +1,49 @@
+<%- layout('layouts/main.ejs')%>
+
+<h1>Carro</h1>
+
+<div class="card card-body">
+  <% var sum = 0 %>
+<table class="table table-hover">
+<thead>
+  <tr class="table-active">  
+  <th scope="col">Eliminar</th>   
+  <th scope="col">Categoria</th>
+  <th scope="col">Nombre</th>
+  <th scope="col">Peso</th>
+  <th scope="col">Precio unidad</th>
+  <th scope="col">Cantidad</th>
+  <th scope="col">Precio Productos</th>  
+  </tr>
+</thead>
+ <tbody>   
+ <% product.forEach(function(product) {%>  
+  <% var partialPrice= product.price * product.unit %>
+  <% sum = sum + partialPrice %>
+ <tr>
+ <form action="/delete" method="POST" >  
+ <td scope="row"><button type="submit" class="btn btn-secondary" name="delete">X</button></td>
+ <td scope="row"><%= product.category %></td>
+ <td scope="row"><%= product.name %></td>
+ <td scope="row"><%= product.weight %></td>
+ <td scope="row"><%= product.price %></td> 
+ <td scope="row"><%= product.unit %></td>
+ <td scope="row"><%= partialPrice %></td>
+ <td scope="row"><input type="hidden" name="id_product" value='<%= product.id %>' size="1px" /></td> 
+</form>
+ </tr> 
+ <% })%>
+</tbody>
+</table>
+<div class="card card-body">Total: <%= sum %> euros</div></div>
+<script>
+  const btnAddShop = document.querySelectorAll(".btn-secondary");
+  btnAddShop.forEach((addToCartButton) => {
+    //addToCartButton.addEventListener('click', addToCartClicked);
+    addToCartButton.addEventListener("click", () => {
+      //console.log("hello");
+      var id= document.getElementById('id').firstChild.data;
+      console.log(id);
+    });
+  });
+</script>

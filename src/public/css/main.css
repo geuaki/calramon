@@ -1,0 +1,13 @@
+body{
+    background-color: #d6bea588;
+}
+.tekman-caja{
+	display: flex;
+	flex-direction: column;
+	margin: 15px;
+}
+.tekman-grid{
+	display: grid;
+	grid-template-columns: repeat(auto-fill,minmax(300px,305px));
+	justify-content: center;
+}
