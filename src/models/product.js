@@ -4,12 +4,13 @@ const { Schema } = mongoose;
 const productSchema = new Schema({
     name: String,
     weight: Number,
-    kg: Boolean,
+    unit: String,
+    isKilogram: Boolean,
     price: Number,
+    // Cambiar quantity a stock
     quantity: Number,
     category: String,
     description: String,
-    unit: Number,
     image: {
         filename: String,
         path: String,

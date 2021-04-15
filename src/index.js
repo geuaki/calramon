@@ -6,6 +6,10 @@ const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
 const multer = require('multer');
+const uuid = require('uuid');
+
+const indexRoutes = require('./routes/index');
+const methodOverride = require ("method-override");
 
 //inicializaciones
 const app = express();
@@ -25,6 +29,7 @@ app.set('view engine', 'ejs');
 //middlewares
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended: false}));
+app.use(methodOverride("_method"));
 app.use(multer({dest: path.join(__dirname, 'public/images/uploads')}).single('image'));
 app.use(session({
     secret: 'mysecretsessioncalramon',
@@ -40,12 +45,20 @@ app.use((req, res, next) => {
     app.locals.user = req.user;
     next();
 });
+const storage = multer.diskStorage({
+    destination: path.join(__dirname, 'public/img/uploads'),
+    filename: (req, file, cb, filename) => {
+        console.log(file);
+        cb(null, uuid() + path.extname(file.originalname));
+    }
+});
 
+app.use(multer({storage}).single('image'));
 
 //rutas
-app.use('/', require('./routes/index'));
+app.use('/', indexRoutes);
 
 //iniciando el servidor
 app.listen(app.get('port'), () => {
-    console.log('Server on Porta', app.get('port'));
+    console.log('Server on Port', app.get('port'));
 });

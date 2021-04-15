@@ -8,7 +8,6 @@ const passport = require('passport');
 const Product = require('../models/product');
 const ShopProduct = require('../models/shop');
 
-const usuario='';
 
 router.get('/', (req, res, next) =>{
     res.render('index');
@@ -39,16 +38,13 @@ router.get('/logout', (req, res, next) => {
     res.redirect('/');
 });
 
-router.get('/profile',  isAuthenticated, (req, res, next) =>{
-   res.render('profile');
-});
-
+/*  Pagina Informacion
 router.get('/origins', async (req, res, next) =>{
     const products = await Product.find();
     const shopProduct= await ShopProduct.find();
     res.render('origins', { products, shopProduct });
 });
-
+*/
 router.get('/fruita', async (req, res, next) =>{
     const products = await Product.find({"category":"fruita"});
     const shopProduct= await ShopProduct.find();
@@ -61,12 +57,6 @@ router.get('/verdura', async (req, res, next) =>{
     res.render('verdura', { products, shopProduct });
 });
 
-router.get('/hortalisses', async (req, res, next) =>{
-    const products = await Product.find({"category":"hortalisses"});
-    const shopProduct= await ShopProduct.find();
-    res.render('hortalisses', { products, shopProduct });
-});
-
 router.get('/llegums', async (req, res, next) =>{
     const products = await Product.find({"category":"llegums"});
     const shopProduct= await ShopProduct.find();
@@ -77,6 +67,72 @@ router.get('/oli', async (req, res, next) =>{
     const products = await Product.find({"category":"oli"});
     const shopProduct= await ShopProduct.find();
     res.render('oli', { products, shopProduct });
+});
+
+router.get('/producte/:id', async (req, res, next) =>{
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('perfilproducte', { product });
+});
+
+router.use((req, res, next) => {
+    isAuthenticated(req, res, next);
+}); 
+
+router.get('/profile', (req, res, next) =>{
+    res.render('profile');
+});
+
+/* router.use((req, res, next) => {
+    isAdmin(req, res, next);
+}); */
+
+router.get('/adminProducts', async (req, res, next) => {
+    const products = await Product.find()
+    res.render('adminProducts', { products });
+});
+
+router.post('/add', async (req, res) => {
+    const product = new Product(req.body);
+    await product.save();
+    res.redirect("/adminProducts");
+});
+
+router.get('/edit/:id', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('editProduct', { product });
+});
+
+router.post('/edit/:id', async (req, res) => {
+    const { id } = req.params;
+    await Product.update({_id: id}, req.body)
+    res.redirect("/adminProducts");
+});
+
+router.get('/delete/:id', async (req, res) => {
+    const { id } = req.params;
+    await Product.remove({_id: id});
+    res.redirect("/adminProducts");
+});
+
+router.get('/producte/:id/delete', async (req, res, next) =>{
+    const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
+    await unlink(path.resolve('./src/public' + product.image.path));
+    res.redirect('/' + product.category);
+});
+
+router.get('/producte/:id/update', async (req, res, next) =>{
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('modificarproducte', { product });
+});
+
+router.put('/producte/updateone/:id', async (req, res, next) =>{
+    const { name, unit, weight, price, quantity, category, description } = req.body;
+    await Product.findByIdAndUpdate(req.params.id, {name, unit, weight, price, quantity, category, description});
+    res.redirect("/");
 });
 
 function isAuthenticated(req, res, next) {
@@ -157,4 +213,11 @@ router.post('/delete',async (req,res) =>{
   });
 
   // Final Eliminar Productos
+/* function isAdmin(req, res, next) {
+    if(req.user.isAdmin === true){
+        return next();
+    }
+    res.redirect('/');
+} */
+
 module.exports = router;
