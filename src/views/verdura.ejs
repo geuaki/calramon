@@ -1,97 +1,189 @@
 <%- layout('layouts/main.ejs') %>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <div class="container">
     <h1>Verdura</h1>
     <div class="container p-4">
+        <% var i =0 %>
         <% if(products.length == 0) { %>
-        
             <div class="alert alert-danger">
                 <p>Ara mateix no tenim productes de Verdura, torni mes tard o explori altres seccions.</p>
             </div>
-        
         <% } else { %>
-            <div class="row justify-content-center">
+            <div class="row">
                 <div class="card-columns">
                     <% products.forEach(function(product) {%>
-                        <div class="col-sm-11">
-                        <div class="card">
-                            <a href="/producte/<%= product._id %>">
-                                <img src="<%= product.image.path %>" class="card-img-top">
-                            </a>
-                            <div class="card-body">
-                                <h5 class="card-title"><%= product.name %></h5>
-                                <% if(product.isKilogram == true) { %>
-                                    <p>Pes: <%= product.weight %>Kg</p>
-                                <% } else { %>
-                                    <p>Unitat: <%= product.unit %></p>
-                                <% } %>
-                                <p>Preu: <%= product.price %>€</p>
-                                <% if(product.quantity <= 0) { %>
-                                    <p>Ens hem quedat sense existències</p>
-                                <% } else { %>
-                                    <p>Quantitat: <%= product.quantity %> restants</p>
-                                <% } %>
-                                <% if(product.isKilogram == true) { %>
-                                    <% if(product.quantity > 0) { %>
-                                        <div class="input-group">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[2]">
-                                                <span class="glyphicon glyphicon-minus"></span>
-                                                </button>
-                                            </span>
-                                            <input type="text" name="quant[2]" class="form-control input-number" value="10" min="1" max="100">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[2]">
-                                                    <span class="glyphicon glyphicon-plus"></span>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    <% } %>
-                                <% } else { %>
-                                    <% if(product.quantity > 0) { %>
-                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <% if(product.quantity >= 1) { %>
-                                                <label class="btn btn-secondary active">
-                                                    <input type="radio" name="options" id="option1" autocomplete="off" checked>1
-                                                </label>
-                                            <% } %>
-                                            <% if(product.quantity >= 2) { %>
-                                                <label class="btn btn-secondary">
-                                                    <input type="radio" name="options" id="option2" autocomplete="off"> 2
-                                                </label>
-                                            <% } %>
-                                            <% if(product.quantity >= 3) { %>
-                                                <label class="btn btn-secondary">
-                                                    <input type="radio" name="options" id="option3" autocomplete="off"> 3
-                                                </label>
-                                            <% } %>
-                                            <% if(product.quantity >= 4) { %>
-                                                <label class="btn btn-secondary">
-                                                    <input type="radio" name="options" id="option4" autocomplete="off"> 4
-                                                </label>
-                                            <% } %>
-                                            <% if(product.quantity >= 5) { %>
-                                                <label class="btn btn-secondary">
-                                                    <input type="radio" name="options" id="option5" autocomplete="off"> 5
-                                                </label>
-                                            <% } %>
-                                        </div>
-                                    <% } %>
-                                <% } %>
-                                <% if(product.quantity <= 0) { %>
-                                    <div>
-                                        <button type="button" class="btn btn-primary mt-3" disabled>Esgotat</button>
-                                    </div>
-                                <% } else { %>
-                                    <div>
-                                        <button type="button" class="btn btn-primary mt-3" >Afegir al cistell</button>
-                                    </div>
-                                <% } %>
-                            </div>
+                    <% i++ %>
+                    <% var sumShop = 0 %>
+                    <div class="card">
+                        <a href="/producte/<%= product._id %>">
+                        <img src="<%= product.image.path %>" class="card-img-top"></a>
+                        <div class="card-body">
+                            <form action="/addShop" method="POST">
+                                <h5 id="tipo" class="card-title"><%= product.name %></h5>
+                                <% if(product.weight > 0) { %>
+                            <span>Pes: </span>
+                            <p id="weight" class="card-weight"><%= product.weight %> kg</p>
+                        <% } else { %>
+                            <p>Unitat: <%= product.unit %></p>
+                        <% } %>
+                        <% shopProduct.forEach(function(shopProduct) {%>              
+                            <% if (product.id==product.id && product.name==shopProduct.name){ %>                
+                              <% sumShop = sumShop + shopProduct.unit %>                              
+                               <%}%>
+                          <%})%>
+                        <span>Unitats: </span><p id="units" class="card-units"><%= sumShop %></p>
+                        <p>Preu: <%= product.price %>€</p>
+                        <% if(product.stock <= 0) { %>
+                            <p>Ens hem quedat sense existències</p>
+                        <% } else { %>
+                            <p>Quantitat: <%= product.stock %> restants</p>
+                        <% } %>
+                        <% if(product.weight > 0 ) { %>
+                            <% if(product.stock > 0) { %>
+                                <input type="hidden" name="id_product" value='<%= product.id %>' />
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" id="minus[<%=i%>]" class="btn btn-danger btn-number" data-type="minus" data-field="quant[<%=i%>]">
+                                            <span class="glyphicon glyphicon-minus"></span>
+                                        </button>
+                                    </span>
+                                <input type="text" id="quant[<%=i%>]" name="quant" class="form-control input-number" value="1" min="1" max="100" />
+                                <span class="input-group-btn">
+                                <button type="button" id="plus[<%=i%>]" class="btn btn-success btn-number" data-type="plus" data-field="quant[<%=i%>]">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </span>
                         </div>
+                        <% } %>
+                        <% } else { %>
+                        <% if(product.stock > 0) { %>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <% if(product.stock >= 1) { %>
+                            <label class="btn btn-secondary active">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked>1
+                            </label>
+                            <% } %>
+                            <% if(product.stock >= 2) { %>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="options" id="option2" autocomplete="off"> 2
+                            </label>
+                            <% } %>
+                            <% if(product.stock >= 3) { %>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="options" id="option3" autocomplete="off"> 3
+                            </label>
+                            <% } %>
+                            <% if(product.stock >= 4) { %>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="options" id="option4" autocomplete="off"> 4
+                            </label>
+                            <% } %>
+                            <% if(product.stock >= 5) { %>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="options" id="option5" autocomplete="off"> 5
+                            </label>
+                            <% } %>
                         </div>
-                    <% }) %>
+                        <% } %>
+                        <% } %>
+                        <% if(product.stock <= 0) { %>
+                        <div>
+                            <button type="button" class="btn btn-primary mt-3" disabled>Esgotat</button>
+                        </div>
+                        <% } else { %>
+                        <div>
+                            <button type="submit" id="add" class="btn btn-primary mt-4">Afegir al cistell</button>
+                        </div>
+                        </form>
+                        <% } %>
+
+                    </div>
+                </div>
+                <% }) %>
                 </div>
             </div>
         <% } %>
     </div>
 </div>
+
+<script>
+    //Codigo botones + y - cantidad
+    //plugin bootstrap minus and plus
+    //http://jsfiddle.net/laelitenetwork/puJ6G/
+    
+    $('.btn-number').click(function(e){
+        e.preventDefault();
+        
+        fieldName = $(this).attr('data-field');
+        type      = $(this).attr('data-type');
+        var input = $("input[id='"+fieldName+"']");
+        console.log("El valor de fieldName es " + fieldName);
+        console.log("El valor de type es " + type);
+        var currentVal = parseInt(input.val());
+        console.log("El valor de val es " + currentVal);
+        if (!isNaN(currentVal)) {
+            if(type == 'minus') {
+                
+                if(currentVal > input.attr('min')) {
+                    input.val(currentVal - 1).change();
+                } 
+                if(parseInt(input.val()) == input.attr('min')) {
+                    $(this).attr('disabled', true);
+                }
+    
+            } else if(type == 'plus') {
+    
+                if(currentVal < input.attr('max')) {
+                  input.val(currentVal + 1).change();
+                }
+                if(parseInt(input.val()) == input.attr('max')) {
+                  $(this).attr('disabled', true);
+                }
+    
+            }
+        } else {
+            input.val(0);
+        }
+    });
+    
+    $('.input-number').focusin(function(){
+       $(this).data('oldValue', $(this).val());
+    });
+    
+    $('.input-number').change(function() {
+        
+        minValue =  parseInt($(this).attr('min'));
+        maxValue =  parseInt($(this).attr('max'));
+        valueCurrent = parseInt($(this).val());
+        
+        name = $(this).attr('id');
+        if(valueCurrent >= minValue) {
+            $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+        } else {
+            alert('Lo sentimos, se alcanzó el valor mínimo');
+            $(this).val($(this).data('oldValue'));
+        }
+        if(valueCurrent <= maxValue) {
+            $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+        } else {
+            alert('Lo sentimos, se alcanzó el valor máximo');
+            $(this).val($(this).data('oldValue'));
+        }   
+    });
+    
+    $(".input-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                 // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) || 
+                 // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                     // let it happen, don't do anything
+                     return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    </script>

@@ -17,9 +17,15 @@
   </tr>
 </thead>
  <tbody>   
- <% product.forEach(function(product) {%>  
-  <% var partialPrice= product.price * product.unit %>
+  <% product.forEach(function(product) {%>  
+  <% var partialPrice= product.price * product.unit %>  
+  <% partialPrice= partialPrice.toFixed(2)%>     <%# limitamos a 2 los decimales. lo convierte en string %>
+  <% partialPrice= parseFloat(partialPrice)%>    <%# convertimos el string en Float %>
+
   <% sum = sum + partialPrice %>
+  <% sum = sum.toFixed(2) %>
+  <% sum = parseFloat(sum)%>
+
  <tr>
  <form action="/delete" method="POST" >  
  <td scope="row"><button type="submit" class="btn btn-secondary" name="delete">X</button></td>

@@ -2,6 +2,7 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <h1>Fruita</h1>
 <div class="container p-4">
+  
   <% var i =0 %>
   <% if(products.length == 0) { %>
 
@@ -31,7 +32,7 @@
                  <%}%>
             <%})%>
             <span>Unitats: </span><p id="units" class="card-units"><%= sumShop %></p>          
-            <span>Quantitat: </span><p id="quantity" class="card-quantity" style="white-space: pre"><%= product.quantity%> restants</p>
+            <span>Quantitat: </span><p id="quantity" class="card-quantity" style="white-space: pre"><%= product.stock%> restants</p>
             <input type="hidden" name="id_product" value='<%= product.id %>'/>
 
             <div class="input-group">

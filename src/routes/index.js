@@ -94,6 +94,7 @@ router.get('/adminProducts', async (req, res, next) => {
 
 router.post('/add', async (req, res) => {
     const product = new Product(req.body);
+    console.log("El body es: ",req.body);
     await product.save();
     res.redirect("/adminProducts");
 });

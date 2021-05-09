@@ -14,7 +14,7 @@
                         <input type="text" name="name" value="<%= product.name %>"
                         class="form-control">
                     </div>
-                    <% if(product.isKilogram == true) { %>
+                    <% if(product.weight > 0) { %>
                         <div class="form-group text-left">
                             <label for="pes">Pes</label>
                             <input type="number" name="weight" value="<%= product.weight %>"
@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-group text-left">
                         <label for="estoc">Estoc</label>
-                        <input type="number" name="quantity" value="<%= product.quantity %>"
+                        <input type="number" name="quantity" value="<%= product.stock %>"
                         class="form-control">
                     </div>
                     <div class="form-group text-left">
