@@ -4,9 +4,8 @@ const { Schema } = mongoose;
 const productSchema = new Schema({
     name: String,
     weight: Number,
-    unit: String,    
-    price: Number,
-    // Cambiar quantity a stock
+    unit: Number,    
+    price: Number,    
     stock: Number,
     category: String,
     description: String,

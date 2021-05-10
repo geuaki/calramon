@@ -41,7 +41,10 @@
  <% })%>
 </tbody>
 </table>
-<div class="card card-body">Total: <%= sum %> euros</div></div>
+<div class="card card-body">Total: <%= sum %> euros</div>
+<button type="button" class="btn btn-primary">Pagar</button>
+<a href="/buyShop">Vamos a pagar</a>
+</div>
 <script>
   const btnAddShop = document.querySelectorAll(".btn-secondary");
   btnAddShop.forEach((addToCartButton) => {

@@ -7,6 +7,7 @@ const {unlink}= require('fs-extra');
 const passport = require('passport');
 const Product = require('../models/product');
 const ShopProduct = require('../models/shop');
+const SalesSchema = require('../models/sales')
 
 
 router.get('/', (req, res, next) =>{
@@ -196,7 +197,7 @@ router.post('/addShop',async (req,res) =>{
    console.log(url);
    res.redirect(url);  //Actualizar los productos en la cesta para cada producto en su etiqueta
   });
-// FINAL LEER
+// FINAL AÑADIR PRODUCTOS
 
 // Eliminar productos
 
@@ -220,5 +221,79 @@ router.post('/delete',async (req,res) =>{
     }
     res.redirect('/');
 } */
+
+//RESTAR AL STOCK PRODUCTOS DESPUES DE COMPRAR 
+
+router.get('/buyShop', async (req,res,next) =>{
+    const cesta= await ShopProduct.find(); 
+    const producto = await Product.find();
+    //const producto= await Product.find();
+    cesta.forEach(function (cesta) {        
+        var id=cesta.productId;
+        var unidades=cesta.unit;
+        var stock;
+        producto.forEach(function(producto){
+            if (id==producto.id){
+                stock=producto.stock-unidades;
+                if (stock >= 0){
+                    Product.findByIdAndUpdate(id,{
+                    stock: stock
+                },(error,product)=>{
+                    console.log(error,id)
+                })
+            }else{
+                console.log("No hay cantidad suficiente")
+            }
+            }
+        })
+    });
+});
+
+    /*
+    var body=req.body;                                      // body del POST
+    console.log("El body es: ",req.body);
+    var usuario= req.user;                                  // usuario de la sesion
+    var identificador=body.id_product;                      // saco el ID del producto   
+    const product= await Product.findById(identificador);   // localizo solo ese producto 
+    
+    console.log("El producto para restar es" + product);
+    //const date=Date();
+    const shopProduct=new ShopProduct({
+        userId: usuario,
+        timestamp: date,
+        productId: product._id,
+        name: product.name,
+        weight: product.weight,
+        kg: product.kg,
+        price: product.price,
+        quantity: product.quantity,
+        category: product.category,
+        description: product.description,
+        unit: req.body.quant,
+        image: {
+            filename: "",
+            path: "",
+            originalname: "",
+            mimetype: "",
+            size: ""  
+        }  
+    });
+    await shopProduct.save();
+    //console.log(req.file);
+    console.log(req.body.id_product);
+    console.log(req.body.quant);    
+    console.log(req.user);
+    console.log("La categoria del producto es "+shopProduct);
+    //console.log("El usuario es" + usuario.id);
+   //console.log(shopProduct);   
+   var url='/'+product.category; //Nos envía a la seccion de la catergoria del producto
+   console.log(url);
+   res.redirect(url);  //Actualizar los productos en la cesta para cada producto en su etiqueta
+   */
+
+    
+// FIN RESTAR STOCK 
+
+
 
 module.exports = router;
