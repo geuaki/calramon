@@ -7,7 +7,8 @@ const {unlink}= require('fs-extra');
 const passport = require('passport');
 const Product = require('../models/product');
 const ShopProduct = require('../models/shop');
-const SalesSchema = require('../models/sales')
+const salesSchema = require('../models/sales');
+const { findByIdAndDelete } = require('../models/product');
 
 
 router.get('/', (req, res, next) =>{
@@ -147,8 +148,15 @@ function isAuthenticated(req, res, next) {
 //LEER PRODUCTOS DE LA CESTA
 
 router.get('/cistella',async (req,res) =>{
-    const product= await ShopProduct.find();
-    console.log(product);
+    const usuario=req.user;    
+    const totalShop= await ShopProduct.find();
+    let product = totalShop.filter((shop) =>{             // Descargamos toda la cesta y filtramos por usuario
+        console.log(shop);                                // con filter creamos el nuevo array de productos
+        console.log("El id del producto es: "+shop.id)
+        if(shop.userId==usuario.id) {
+            return shop;
+        }
+    });
     res.render('cistella', { product });
 });
 
@@ -157,8 +165,7 @@ router.get('/cistella',async (req,res) =>{
 //AÑADIR A LA CESTA PRODUCTOS
 
 router.post('/addShop',async (req,res) =>{
-    var body=req.body;                                      // body del POST
-    console.log("El body es: ",req.body);
+    var body=req.body;                                      // body del POST    
     var usuario= req.user;                                  // usuario de la sesion
     var identificador=body.id_product;                      // saco el ID del producto   
     const product= await Product.findById(identificador);   // localizo solo ese producto 
@@ -166,7 +173,7 @@ router.post('/addShop',async (req,res) =>{
     console.log("El producto para añadir es" + product);
     const date=Date();
     const shopProduct=new ShopProduct({
-        userId: usuario,
+        userId: usuario.id,
         timestamp: date,
         productId: product._id,
         name: product.name,
@@ -185,17 +192,14 @@ router.post('/addShop',async (req,res) =>{
             size: ""  
         }  
     });
-    await shopProduct.save();
-    //console.log(req.file);
+    await shopProduct.save();   
     console.log(req.body.id_product);
     console.log(req.body.quant);    
     console.log(req.user);
-    console.log("La categoria del producto es "+shopProduct);
-    //console.log("El usuario es" + usuario.id);
-   //console.log(shopProduct);   
-   var url='/'+product.category; //Nos envía a la seccion de la catergoria del producto
+    console.log("La categoria del producto es "+shopProduct);   
+   var url='/'+product.category;                                //Nos envía a la seccion de la catergoria del producto
    console.log(url);
-   res.redirect(url);  //Actualizar los productos en la cesta para cada producto en su etiqueta
+   res.redirect(url);                                          //Actualizar los productos en la cesta para cada producto en su etiqueta
   });
 // FINAL AÑADIR PRODUCTOS
 
@@ -224,13 +228,19 @@ router.post('/delete',async (req,res) =>{
 
 //RESTAR AL STOCK PRODUCTOS DESPUES DE COMPRAR 
 
-router.get('/buyShop', async (req,res,next) =>{
-    const cesta= await ShopProduct.find(); 
-    const producto = await Product.find();
-    //const producto= await Product.find();
-    cesta.forEach(function (cesta) {        
-        var id=cesta.productId;
-        var unidades=cesta.unit;
+router.get('/buyShop', async (req,res) =>{    
+    const usuario=req.user;    
+    const totalShop= await ShopProduct.find();
+    let basket = totalShop.filter((shop) =>{             // Descargamos toda la cesta y filtramos por usuario
+        console.log(shop);                               // con filter creamos el nuevo array de productos        
+        if(shop.userId==usuario.id) {
+            return shop;
+        }
+    });
+    const producto = await Product.find();    
+    basket.forEach(function (basket) {        
+        var id=basket.productId;
+        var unidades=basket.unit;
         var stock;
         producto.forEach(function(producto){
             if (id==producto.id){
@@ -247,51 +257,24 @@ router.get('/buyShop', async (req,res,next) =>{
             }
         })
     });
+    const date=Date();
+    const SalesSchema = new salesSchema({
+        userId: req.user,
+        timestamp: date, 
+        products: basket       
+    });
+    await SalesSchema.save();
+    basket.forEach(function(basket){
+        const id= basket.id;
+        ShopProduct.findByIdAndDelete(id,{
+        },(error,basket)=>{
+            console.log(error,id)
+        });
+    });
+    res.redirect('/');
+    
 });
 
-    /*
-    var body=req.body;                                      // body del POST
-    console.log("El body es: ",req.body);
-    var usuario= req.user;                                  // usuario de la sesion
-    var identificador=body.id_product;                      // saco el ID del producto   
-    const product= await Product.findById(identificador);   // localizo solo ese producto 
-    
-    console.log("El producto para restar es" + product);
-    //const date=Date();
-    const shopProduct=new ShopProduct({
-        userId: usuario,
-        timestamp: date,
-        productId: product._id,
-        name: product.name,
-        weight: product.weight,
-        kg: product.kg,
-        price: product.price,
-        quantity: product.quantity,
-        category: product.category,
-        description: product.description,
-        unit: req.body.quant,
-        image: {
-            filename: "",
-            path: "",
-            originalname: "",
-            mimetype: "",
-            size: ""  
-        }  
-    });
-    await shopProduct.save();
-    //console.log(req.file);
-    console.log(req.body.id_product);
-    console.log(req.body.quant);    
-    console.log(req.user);
-    console.log("La categoria del producto es "+shopProduct);
-    //console.log("El usuario es" + usuario.id);
-   //console.log(shopProduct);   
-   var url='/'+product.category; //Nos envía a la seccion de la catergoria del producto
-   console.log(url);
-   res.redirect(url);  //Actualizar los productos en la cesta para cada producto en su etiqueta
-   */
-
-    
 // FIN RESTAR STOCK 
 
 
