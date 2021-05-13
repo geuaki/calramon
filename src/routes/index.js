@@ -72,7 +72,8 @@ router.get('/oli', async (req, res, next) =>{
 router.get('/producte/:id', async (req, res, next) =>{
     const { id } = req.params;
     const product = await Product.findById(id);
-    res.render('perfilproducte', { product });
+    const shopProduct= await ShopProduct.find();
+    res.render('perfilproducte', { product, shopProduct });
 });
 
 router.use((req, res, next) => {

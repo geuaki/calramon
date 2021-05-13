@@ -1,50 +1,103 @@
 <%- layout('layouts/main.ejs')%>
 
-    <section>
-        <img class="img-fluid mt-3 mb-3" src="images/landing.jpg" style="width: 100%">
-    </section>
-    <div class="container">
+<style>   
+    .bg {
+      background-image: url("images/landing2.jpg");
+    }
+</style>
+
+    <div class="bg">
+        <div class="mask">
+        <div class="caption">
+            <h1><span class="border">EL MERCAT</span></h1>
+            <br>
+            <h1><span class="border"> A CASA</span></h1>
+        </div>
+        </div>
+    </div>
+
+    
     <section class="tekman-cont">
         <div class="section-cont">
             <div class="tekman-grid">
-                <div class="tekman-caja">
-                    <img src="images/cireres.jpeg">
-                    <p class="home-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse metus odio, semper in mi eget, tempus gravida lacus. Vivamus in cursus lectus. Nullam accumsan turpis erat, nec mollis purus molestie at. Pellentesque sed ligula elementum, luctus quam ut, feugiat libero.</p>
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img class="img-land" src="images/cireres.jpeg">
+                    <div class="card-body">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse metus odio,.</p>
+                    </div>
                 </div>
-                <div class="tekman-caja">
-                    <img src="images/cistell.jpg">
-                    <p class="home-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse metus odio, semper in mi eget, tempus gravida lacus. Vivamus in cursus lectus. Nullam accumsan turpis erat, nec mollis purus molestie at. Pellentesque sed ligula elementum, luctus quam ut, feugiat libero.</p>
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img class="img-land" src="images/cistell.jpg">
+                    <div class="card-body">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse metus odio,</p>
+                    </div>
                 </div>
-                <div class="tekman-caja">
-                    <img src="images/mongetes.jpg">
-                    <p class="home-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse metus odio, semper in mi eget, tempus gravida lacus. Vivamus in cursus lectus. Nullam accumsan turpis erat, nec mollis purus molestie at. Pellentesque sed ligula elementum, luctus quam ut, feugiat libero.</p>
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img class="img-land" src="images/mongetes.jpg">
+                    <div class="card-body">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse metus odio,</p>
+                    </div>
+                </div>
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img class="img-land" src="images/mongetes.jpg">
+                    <div class="card-body">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse metus odio,</p>
+                    </div>
+                </div>
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img class="img-land" src="images/mongetes.jpg">
+                    <div class="card-body">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse metus odio,</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
+    
+    <div class="temporada">
     <section>
-        <img class="maquina" src="images/placeholder.png">
+        <img class="img-long" src="images/landing-long.jpg">
     </section>
-
     <section class="tekman-cont">
-        <h2>Productes de Temporada</h2>
         <div class="section-cont">
+            <h2>Productes de temporada</h2>
             <div class="tekman-grid">
-                <div class="tekman-caja">
-                    <img src="images/unnamed.png">
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img src="images/mongetes.jpg" class="card-img-top" />
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary mt-3">comprar</button>
+                    </div>
                 </div>
-                <div class="tekman-caja">
-                    <img src="images/unnamed.png">
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img src="images/mongetes.jpg" class="card-img-top" />
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary mt-3">comprar</button>
+                    </div>
                 </div>
-                <div class="tekman-caja">
-                    <img src="images/unnamed.png">
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img src="images/mongetes.jpg" class="card-img-top" />
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary mt-3">comprar</button>
+                    </div>
+                </div>
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img src="images/mongetes.jpg" class="card-img-top" />
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary mt-3">comprar</button>
+                    </div>
+                </div>
+                <div class="card mb-4 mt-4 mr-3 ml-3">
+                    <img src="images/mongetes.jpg" class="card-img-top" />
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary mt-3">comprar</button>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+    </div>
 
-    <footer>
+    <footer class="bg-primary">
         <h1>footer</h1>
     </footer>
-    </div>
+    
