@@ -245,10 +245,10 @@ router.get('/buyShop', async (req,res) =>{
         var stock;
         producto.forEach(function(producto){
             if (id==producto.id){
-                stock=producto.stock-unidades;
+                stock=producto.quantity-unidades;
                 if (stock >= 0){
                     Product.findByIdAndUpdate(id,{
-                    stock: stock
+                    quantity: stock
                 },(error,product)=>{
                     console.log(error,id)
                 })

@@ -6,7 +6,8 @@ const productSchema = new Schema({
     weight: Number,
     unit: Number,    
     price: Number,    
-    stock: Number,
+    quantity: Number,
+    isKilogram: Boolean,
     category: String,
     description: String,
     image: {
