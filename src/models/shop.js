@@ -7,7 +7,6 @@ const ShopProduct =  new Schema({
     productId: String,
     name: String,
     weight: Number,
-    kg: Boolean,
     price: Number,
     quantity: Number,
     category: String,
@@ -20,6 +19,6 @@ const ShopProduct =  new Schema({
         mimetype: String,
         size: Number
     }
-});
+}); 
 
 module.exports = mongoose.model('shop', ShopProduct);

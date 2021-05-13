@@ -3,8 +3,7 @@ const { Schema } = mongoose;
 
 const salesProduct =  new Schema({
     name: String,
-    weight: Number,
-    kg: Boolean,
+    weight: Number,   
     price: Number,
     quantity: Number,
     category: String,

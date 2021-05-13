@@ -10,22 +10,30 @@
   <th scope="col">Eliminar</th>   
   <th scope="col">Categoria</th>
   <th scope="col">Nombre</th>
-  <th scope="col">Peso</th>
+  <th scope="col">Peso (kg)</th>
+  <th scope="col">Unidades</th>
   <th scope="col">Precio unidad</th>
   <th scope="col">Cantidad</th>
   <th scope="col">Precio Productos</th>  
   </tr>
 </thead>
  <tbody>   
- <% product.forEach(function(product) {%>  
-  <% var partialPrice= product.price * product.unit %>
+  <% product.forEach(function(product) {%>  
+  <% var partialPrice= product.price * product.unit %>  
+  <% partialPrice= partialPrice.toFixed(2)%>     <%# limitamos a 2 los decimales. lo convierte en string %>
+  <% partialPrice= parseFloat(partialPrice)%>    <%# convertimos el string en Float %>
+
   <% sum = sum + partialPrice %>
+  <% sum = sum.toFixed(2) %>
+  <% sum = parseFloat(sum)%>
+
  <tr>
  <form action="/delete" method="POST" >  
  <td scope="row"><button type="submit" class="btn btn-secondary" name="delete">X</button></td>
  <td scope="row"><%= product.category %></td>
  <td scope="row"><%= product.name %></td>
  <td scope="row"><%= product.weight %></td>
+ <td scope="row"><%= product.quantity %></td>
  <td scope="row"><%= product.price %></td> 
  <td scope="row"><%= product.unit %></td>
  <td scope="row"><%= partialPrice %></td>
@@ -35,7 +43,10 @@
  <% })%>
 </tbody>
 </table>
-<div class="card card-body">Total: <%= sum %> euros</div></div>
+<div class="card card-body">Total: <%= sum %> euros</div>
+<button type="button" class="btn btn-primary">Pagar</button>
+<a href="/buyShop">Vamos a pagar</a>
+</div>
 <script>
   const btnAddShop = document.querySelectorAll(".btn-secondary");
   btnAddShop.forEach((addToCartButton) => {

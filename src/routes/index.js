@@ -7,6 +7,8 @@ const {unlink}= require('fs-extra');
 const passport = require('passport');
 const Product = require('../models/product');
 const ShopProduct = require('../models/shop');
+const salesSchema = require('../models/sales');
+const { findByIdAndDelete } = require('../models/product');
 
 
 router.get('/', (req, res, next) =>{
@@ -95,6 +97,7 @@ router.get('/adminProducts', async (req, res, next) => {
 
 router.post('/add', async (req, res) => {
     const product = new Product(req.body);
+    console.log("El body es: ",req.body);
     await product.save();
     res.redirect("/adminProducts");
 });
@@ -146,8 +149,15 @@ function isAuthenticated(req, res, next) {
 //LEER PRODUCTOS DE LA CESTA
 
 router.get('/cistella',async (req,res) =>{
-    const product= await ShopProduct.find();
-    console.log(product);
+    const usuario=req.user;    
+    const totalShop= await ShopProduct.find();
+    let product = totalShop.filter((shop) =>{             // Descargamos toda la cesta y filtramos por usuario
+        console.log(shop);                                // con filter creamos el nuevo array de productos
+        console.log("El id del producto es: "+shop.id)
+        if(shop.userId==usuario.id) {
+            return shop;
+        }
+    });
     res.render('cistella', { product });
 });
 
@@ -156,8 +166,7 @@ router.get('/cistella',async (req,res) =>{
 //AÑADIR A LA CESTA PRODUCTOS
 
 router.post('/addShop',async (req,res) =>{
-    var body=req.body;                                      // body del POST
-    console.log("El body es: ",req.body);
+    var body=req.body;                                      // body del POST    
     var usuario= req.user;                                  // usuario de la sesion
     var identificador=body.id_product;                      // saco el ID del producto   
     const product= await Product.findById(identificador);   // localizo solo ese producto 
@@ -165,7 +174,7 @@ router.post('/addShop',async (req,res) =>{
     console.log("El producto para añadir es" + product);
     const date=Date();
     const shopProduct=new ShopProduct({
-        userId: usuario,
+        userId: usuario.id,
         timestamp: date,
         productId: product._id,
         name: product.name,
@@ -184,19 +193,16 @@ router.post('/addShop',async (req,res) =>{
             size: ""  
         }  
     });
-    await shopProduct.save();
-    //console.log(req.file);
+    await shopProduct.save();   
     console.log(req.body.id_product);
     console.log(req.body.quant);    
     console.log(req.user);
-    console.log("La categoria del producto es "+shopProduct);
-    //console.log("El usuario es" + usuario.id);
-   //console.log(shopProduct);   
-   var url='/'+product.category; //Nos envía a la seccion de la catergoria del producto
+    console.log("La categoria del producto es "+shopProduct);   
+   var url='/'+product.category;                                //Nos envía a la seccion de la catergoria del producto
    console.log(url);
-   res.redirect(url);  //Actualizar los productos en la cesta para cada producto en su etiqueta
+   res.redirect(url);                                          //Actualizar los productos en la cesta para cada producto en su etiqueta
   });
-// FINAL LEER
+// FINAL AÑADIR PRODUCTOS
 
 // Eliminar productos
 
@@ -220,5 +226,58 @@ router.post('/delete',async (req,res) =>{
     }
     res.redirect('/');
 } */
+
+//RESTAR AL STOCK PRODUCTOS DESPUES DE COMPRAR 
+
+router.get('/buyShop', async (req,res) =>{    
+    const usuario=req.user;    
+    const totalShop= await ShopProduct.find();
+    let basket = totalShop.filter((shop) =>{             // Descargamos toda la cesta y filtramos por usuario
+        console.log(shop);                               // con filter creamos el nuevo array de productos        
+        if(shop.userId==usuario.id) {
+            return shop;
+        }
+    });
+    const producto = await Product.find();    
+    basket.forEach(function (basket) {        
+        var id=basket.productId;
+        var unidades=basket.unit;
+        var stock;
+        producto.forEach(function(producto){
+            if (id==producto.id){
+                stock=producto.stock-unidades;
+                if (stock >= 0){
+                    Product.findByIdAndUpdate(id,{
+                    stock: stock
+                },(error,product)=>{
+                    console.log(error,id)
+                })
+            }else{
+                console.log("No hay cantidad suficiente")
+            }
+            }
+        })
+    });
+    const date=Date();
+    const SalesSchema = new salesSchema({
+        userId: req.user,
+        timestamp: date, 
+        products: basket       
+    });
+    await SalesSchema.save();
+    basket.forEach(function(basket){
+        const id= basket.id;
+        ShopProduct.findByIdAndDelete(id,{
+        },(error,basket)=>{
+            console.log(error,id)
+        });
+    });
+    res.redirect('/');
+    
+});
+
+// FIN RESTAR STOCK 
+
+
 
 module.exports = router;

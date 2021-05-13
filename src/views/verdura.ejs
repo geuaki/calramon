@@ -1,16 +1,15 @@
 <%- layout('layouts/main.ejs') %>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <div class="container">
     <h1>Verdura</h1>
     <div class="container p-4">
         <% var i=0 %>
         <% if(products.length == 0) { %>
-        
             <div class="alert alert-danger">
                 <p>Ara mateix no tenim productes de Verdura, torni mes tard o explori altres seccions.</p>
             </div>
-        
         <% } else { %>
-            <div class="row justify-content-center">
+            <div class="row">
                 <div class="card-columns">
                   <% products.forEach(function(product) {%>
                     <% i++ %>

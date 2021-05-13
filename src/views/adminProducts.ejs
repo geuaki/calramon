@@ -11,8 +11,12 @@
                             <input type="text" name="name" id="name" placeholder="Name" class="form-control">
                         </div>
                         <div class="form-group">
-                            <input type="text" name="Weight" id="weight" placeholder="weight" class="form-control">
+                            <input type="text" name="weight" id="weight" placeholder="weight" class="form-control">
                         </div> 
+                        <div class="form-group">
+                            <input type="text" name="unit" id="unit" placeholder="unit" class="form-control">
+                        </div> 
+
                         <div class="form-group">
                             <input type="text" name="price" id="price" placeholder="Price" class="form-control">
                         </div>
@@ -20,7 +24,7 @@
                             <input type="text" name="category" id="category" placeholder="Categoria" class="form-control">
                         </div>
                         <div class="form-group">
-                            <input type="text" name="quantity" id="quantity" placeholder="Cantidad en stock" class="form-control">
+                            <input type="text" name="stock" id="stock" placeholder="Cantidad en stock" class="form-control">
                         </div>
                         <div class="form-group">
                             <textarea  name="description" cols= 80 placeholder="Description" class="form-control">
@@ -44,6 +48,7 @@
                     <tr>
                         <th>Nº</th>
                         <th>Nombre</th>
+                        <th>Pes(kg)</th>
                         <th>Unitat</th>
                         <th>Precio</th>
                         <th>Categoria</th>
@@ -57,10 +62,11 @@
                         <tr>
                             <td><%= i + 1 %></td>
                             <td><%= products[i].name %></td>
-                            <td><%= products[i].Unitat %></td>
+                            <td><%= products[i].weight %></td>
+                            <td><%= products[i].unit %></td>
                             <td><%= products[i].price %> €</td>
                             <td><%= products[i].category %></td>
-                            <td><%= products[i].quantity %></td>
+                            <td><%= products[i].stock %></td>                            
                             <td><%= products[i].description %></td>
                             <!-- <td><%= products[i].image %></td> -->
                             <td>
