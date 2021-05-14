@@ -2,7 +2,8 @@
 
 <h1>Carro</h1>
 
-<div class="card card-body">
+<div class="card card-body"  style="overflow-x:auto;">
+  <div style="overflow-x:auto;">
   <% var sum = 0 %>
 <table class="table table-hover">
 <thead>
@@ -45,9 +46,9 @@
  <% })%>
 </tbody>
 </table>
+  </div>
 <div class="card card-body">Total: <%= sum %> euros</div>
-<button type="button" class="btn btn-primary">Pagar</button>
-<a href="/buyShop">Vamos a pagar</a>
+<button type="button" id= "pay" class="btn btn-primary">Pagar</button>
 </div>
 <script>
   const btnAddShop = document.querySelectorAll(".btn-secondary");
@@ -59,4 +60,9 @@
       console.log(id);
     });
   });
+  var Pay= document.getElementById("pay");
+  Pay.addEventListener("click", function(){
+    alert("Compra realizada correctamente");
+    window.location.assign('/buyShop');    
+  })
 </script>

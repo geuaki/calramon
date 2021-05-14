@@ -43,40 +43,42 @@
         </div>
         <!-- LIST -->
         <div class="col-md-7">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Nº</th>
-                        <th>Nombre</th>
-                        <th>Pes(kg)</th>
-                        <th>Unitat</th>
-                        <th>Precio</th>
-                        <th>Categoria</th>
-                        <th>Cantidad en stock</th>
-                        <th>Descripcion</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for(var i = 0; i < products.length; i++) { %>
+            <div style="overflow-x:auto;">
+                <table class="table table-bordered table-hover">
+                    <thead>
                         <tr>
-                            <td><%= i + 1 %></td>
-                            <td><%= products[i].name %></td>
-                            <td><%= products[i].weight %></td>
-                            <td><%= products[i].unit %></td>
-                            <td><%= products[i].price %> €</td>
-                            <td><%= products[i].category %></td>
-                            <td><%= products[i].stock %></td>                            
-                            <td><%= products[i].description %></td>
-                            <!-- <td><%= products[i].image %></td> -->
-                            <td>
-                                <a href="/edit/<%= products[i]._id %>" class="btn btn-info">Edit</a>
-                                <a href="/delete/<%= products[i]._id %>" class="btn btn-danger">Delete</a>
-                            </td>
+                            <th>Nº</th>
+                            <th>Nombre</th>
+                            <th>Pes(kg)</th>
+                            <th>Unitat</th>
+                            <th>Precio</th>
+                            <th>Categoria</th>
+                            <th>Cantidad en stock</th>
+                            <th>Descripcion</th>
+                            <th>Acciones</th>
                         </tr>
-                    <% } %>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <% for(var i = 0; i < products.length; i++) { %>
+                            <tr>
+                                <td><%= i + 1 %></td>
+                                <td><%= products[i].name %></td>
+                                <td><%= products[i].weight %></td>
+                                <td><%= products[i].unit %></td>
+                                <td><%= products[i].price %> €</td>
+                                <td><%= products[i].category %></td>
+                                <td><%= products[i].stock %></td>                            
+                                <td><%= products[i].description %></td>
+                                <!-- <td><%= products[i].image %></td> -->
+                                <td>
+                                    <a href="/edit/<%= products[i]._id %>" class="btn btn-info">Edit</a>
+                                    <a href="/delete/<%= products[i]._id %>" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
