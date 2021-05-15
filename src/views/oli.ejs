@@ -47,6 +47,7 @@
                                 <% sumShop=sumShop + shopProduct.unit %>
                                   <%}%>
                                     <%})%>
+                                    <p>Dins de la Cistella: <%= sumShop%></p>
                                       <input type="hidden" name="id_product" value='<%= product.id %>' />
                                      <% if(product.isKilogram == true) { %>
                                         <% if(product.quantity > 0) { %>
