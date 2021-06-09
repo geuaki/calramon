@@ -86,54 +86,50 @@ router.get('/profile', (req, res, next) =>{
     res.render('profile');
 });
 
-/* router.use((req, res, next) => {
-    isAdmin(req, res, next);
-}); */
-
-router.get('/adminProducts', async (req, res, next) => {
+router.get('/adminProducts',isAdmin, async (req, res, next) => {
     const products = await Product.find()
     res.render('adminProducts', { products });
 });
 
-router.post('/add', async (req, res) => {
+router.post('/add',isAdmin, async (req, res) => {
     const product = new Product(req.body);
     console.log("El body es: ",req.body);
     await product.save();
     res.redirect("/adminProducts");
 });
 
-router.get('/edit/:id', async (req, res) => {
+router.get('/edit/:id',isAdmin, async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id);
     res.render('editProduct', { product });
 });
 
-router.post('/edit/:id', async (req, res) => {
+router.post('/edit/:id',isAdmin, async (req, res) => {
     const { id } = req.params;
     await Product.update({_id: id}, req.body)
     res.redirect("/adminProducts");
 });
 
-router.get('/delete/:id', async (req, res) => {
+router.get('/delete/:id',isAdmin, async (req, res) => {
     const { id } = req.params;
     await Product.remove({_id: id});
     res.redirect("/adminProducts");
 });
 
-router.get('/producte/:id/delete', async (req, res, next) =>{
+router.get('/producte/:id/delete',isAdmin, async (req, res, next) =>{
     const { id } = req.params;
     const product = await Product.findByIdAndDelete(id);
     await unlink(path.resolve('./src/public' + product.image.path));
     res.redirect('/' + product.category);
 });
 
-router.get('/producte/:id/update', async (req, res, next) =>{
+router.get('/producte/:id/update',isAdmin, async (req, res, next) =>{
     const { id } = req.params;
     const product = await Product.findById(id);
     res.render('modificarproducte', { product });
 });
 
-router.put('/producte/updateone/:id', async (req, res, next) =>{
+router.put('/producte/updateone/:id',isAdmin, async (req, res, next) =>{
     const { name, unit, weight, price, quantity, category, description } = req.body;
     await Product.findByIdAndUpdate(req.params.id, {name, unit, weight, price, quantity, category, description});
     res.redirect("/");
@@ -145,6 +141,13 @@ function isAuthenticated(req, res, next) {
     }
     res.redirect('/');
 };
+
+function isAdmin(req, res, next){
+    if(req.user.isAdmin){
+        return next();
+    }
+    res.redirect('/');
+}
 
 //LEER PRODUCTOS DE LA CESTA
 
