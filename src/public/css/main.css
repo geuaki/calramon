@@ -1,0 +1,73 @@
+body, html {
+	height: 100%;
+	margin: 0;
+  }
+.tekman-caja{
+	display: flex;
+	flex-direction: column;
+	margin: 15px;
+}
+.tekman-grid{
+	display: grid;
+	grid-template-columns: repeat(auto-fill,minmax(330px,335px));
+	justify-content: center;
+	
+}
+.bg{
+	object-fit: cover;
+	height: 100%; 
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.caption span.border{
+	color: #fff;
+	font-size: 50px;
+	letter-spacing: 10px;
+	border-style: none !important;
+}
+.caption{
+	position: absolute;
+    left: 0;
+    top: 70%;
+    width: 100%;
+    text-align: center;
+}
+.mask {
+    background-color: rgba(0, 0, 0, 0.5);
+	height: 100%;
+}
+.card{
+	object-fit: contain;
+}
+.img-land{
+	height: 400px;
+    object-fit: cover;
+}
+.temporada{
+	padding-top: 125px;
+	margin-top: -125px;
+    background-color: #d6bea588;
+}
+.img-long{
+	width: 100%;
+	height: 400px;
+	object-fit: cover;
+}
+h2{
+	text-align:center;
+	padding-top: 2rem;
+}
+.logo{
+	width: 30%;
+	text-align: center;
+}
+.navbar-brand{
+	text-align: center;
+}
+h1{
+	padding-top: 2rem;
+}
+.pfoot{
+	width: 20%;
+}

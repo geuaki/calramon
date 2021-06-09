@@ -1,0 +1,72 @@
+<%- layout('layouts/main.ejs')%>
+
+<h1>Carro</h1>
+
+<div class="card card-body"  style="overflow-x:auto;">
+  <div style="overflow-x:auto;">
+  <% var sum = 0 %>
+<table class="table table-hover">
+<thead>
+  <tr class="table-active">  
+  <th scope="col">Eliminar</th>   
+  <th scope="col">Categoria</th>
+  <th scope="col">Nombre</th>
+  <th scope="col">Peso (KG)/ Unidades</th>
+  <th scope="col">Precio unidad</th>
+  <th scope="col">Cantidad</th>
+  <th scope="col">Precio Productos</th>  
+  </tr>
+</thead>
+ <tbody>   
+  <% product.forEach(function(product) {%>  
+  <% var partialPrice= product.price * product.unit %>  
+  <% partialPrice= partialPrice.toFixed(2)%>     <%# limitamos a 2 los decimales. lo convierte en string %>
+  <% partialPrice= parseFloat(partialPrice)%>    <%# convertimos el string en Float %>
+
+  <% sum = sum + partialPrice %>
+  <% sum = sum.toFixed(2) %>
+  <% sum = parseFloat(sum)%>
+
+ <tr>
+ <form action="/delete" method="POST" >  
+ <td scope="row"><button type="submit" class="btn btn-secondary" name="delete">X</button></td>
+ <td scope="row"><%= product.category %></td>
+ <td scope="row"><%= product.name %></td>
+ <% if(product.isKilogram == true) { %>
+  <td scope="row"><%= product.weight %></td>
+<% } else { %>
+    <td scope="row"><%= product.unit %></td>
+<% } %>
+ <td scope="row"><%= product.price %></td> 
+ <td scope="row"><%= product.unit %></td>
+ <td scope="row"><%= partialPrice %></td>
+ <td scope="row"><input type="hidden" name="id_product" value='<%= product.id %>' size="1px" /></td> 
+</form>
+ </tr> 
+ <% })%>
+</tbody>
+</table>
+</div>
+
+<form action="/buyShop" method="POST">
+<div id ="total" class="card card-body">Total: <%= sum %> euros<i class="fas fa-money-bill-alt"></i></div>
+<input type="hidden" name="tot" value="<%= sum*100 %> "/> <!--Enviar total en centimos a stripe-->
+<script
+src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+data-key="pk_test_51IxydJHlGzQbLeTpvcLZX6cxUDXgltjRxJQI1ghWw00r9Dn4had60RkAu6GwH7TbJcBGPv9sBBP5CZvwmaChEl7g00LYfOnVHs"
+data-email="<%= user.email%>"
+data-amount= "<%= sum*100 %>"
+data-name="CalRamon"
+data-description="Example Charge"
+data-image="/images/masia5.png"
+data-locale="auto"
+data-currency="eur">
+</script>
+<!--Ocultar el boton de stripe-->
+<script>
+document.getElementsByClassName('stripe-button-el')[0].style.display = 'none';
+</script>
+<button class="btn btn-primary btn-block">Pagar <i class="fas fa-shopping-cart"></i></button>
+</form>
+<!--<button type="button" id= "pay" class="btn btn-primary">Pagar <i class="fas fa-shopping-cart"></i></button>-->
+</div>
