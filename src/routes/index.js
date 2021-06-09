@@ -9,7 +9,7 @@ const Product = require('../models/product');
 const ShopProduct = require('../models/shop');
 const salesSchema = require('../models/sales');
 const { findByIdAndDelete } = require('../models/product');
-
+const stripe = require ('stripe')('sk_test_51IxydJHlGzQbLeTpRcbvrOld4WdnSYDHNhMHAzXClZLreg8rD0SZ3iOvrqduBVpfIKLeJ8AABBR50ZpK0OfyDx76005EPUVmpu');
 
 router.get('/', (req, res, next) =>{
     res.render('index');
@@ -50,25 +50,25 @@ router.get('/origins', async (req, res, next) =>{
 router.get('/fruita', async (req, res, next) =>{
     const products = await Product.find({"category":"fruita"});
     const shopProduct= await ShopProduct.find();
-    res.render('fruita', { products, shopProduct });
+    res.render('fruita', { products, shopProduct ,categoria: 'Fruita'});
 });
 
 router.get('/verdura', async (req, res, next) =>{
     const products = await Product.find({"category":"verdura"});
     const shopProduct= await ShopProduct.find();
-    res.render('verdura', { products, shopProduct });
+    res.render('verdura', { products, shopProduct ,categoria: 'Verdura'});
 });
 
 router.get('/llegums', async (req, res, next) =>{
     const products = await Product.find({"category":"llegums"});
     const shopProduct= await ShopProduct.find();
-    res.render('llegums', { products, shopProduct });
+    res.render('llegums', { products, shopProduct,categoria: 'Llegums'});
 });
 
 router.get('/oli', async (req, res, next) =>{
     const products = await Product.find({"category":"oli"});
     const shopProduct= await ShopProduct.find();
-    res.render('oli', { products, shopProduct });
+    res.render('oli', { products, shopProduct, categoria: 'Oli' });
 });
 
 router.get('/producte/:id', async (req, res, next) =>{
@@ -152,29 +152,26 @@ function isAdmin(req, res, next){
 //LEER PRODUCTOS DE LA CESTA
 
 router.get('/cistella',async (req,res) =>{
-    const usuario=req.user;    
-    const totalShop= await ShopProduct.find();
-    let product = totalShop.filter((shop) =>{             // Descargamos toda la cesta y filtramos por usuario
-        console.log(shop);                                // con filter creamos el nuevo array de productos
-        console.log("El id del producto es: "+shop.id)
-        if(shop.userId==usuario.id) {
-            return shop;
-        }
+    const usuario=req.user;
+    //console.log(usuario.id);
+    const totalShop= await ShopProduct.find({"userId":usuario.id});
+    //console.log(totalShop);
+    product = totalShop.filter((shop) =>{       // con filter creamos el nuevo array de productos
+    return shop;
     });
     res.render('cistella', { product });
 });
-
 // FINAL LEER
 
 //AÑADIR A LA CESTA PRODUCTOS
 
 router.post('/addShop',async (req,res) =>{
-    var body=req.body;                                      // body del POST    
+    var body=req.body;                                      // body del POST
     var usuario= req.user;                                  // usuario de la sesion
-    var identificador=body.id_product;                      // saco el ID del producto   
-    const product= await Product.findById(identificador);   // localizo solo ese producto 
-    
-    console.log("El producto para añadir es" + product);
+    var identificador=body.id_product;                      // saco el ID del producto
+    const product= await Product.findById(identificador);   // localizo solo ese producto
+
+    //console.log("El producto para añadir es" + product);
     const date=Date();
     const shopProduct=new ShopProduct({
         userId: usuario.id,
@@ -193,16 +190,16 @@ router.post('/addShop',async (req,res) =>{
             path: "",
             originalname: "",
             mimetype: "",
-            size: ""  
-        }  
+            size: ""
+        }
     });
-    await shopProduct.save();   
-    console.log(req.body.id_product);
-    console.log(req.body.quant);    
-    console.log(req.user);
-    console.log("La categoria del producto es "+shopProduct);   
+    await shopProduct.save();
+   // console.log(req.body.id_product);
+   // console.log(req.body.quant);
+   // console.log(req.user);
+   // console.log("La categoria del producto es "+shopProduct);
    var url='/'+product.category;                                //Nos envía a la seccion de la catergoria del producto
-   console.log(url);
+   //console.log(url);
    res.redirect(url);                                          //Actualizar los productos en la cesta para cada producto en su etiqueta
   });
 // FINAL AÑADIR PRODUCTOS
@@ -214,8 +211,8 @@ router.post('/delete',async (req,res) =>{
     //var usuario= req.user                                 // usuario de la sesion
     var identificador=body.id_product;                      // saco el ID del producto;
     const {id}= req.params;
-    console.log(id);
-    console.log(identificador);                    
+    //console.log(id);
+    //console.log(identificador);
     await ShopProduct.findByIdAndDelete(identificador);     // localizo solo ese producto 
     res.redirect('/cistella'); 
     const image = await Image.findByIdAndDelete(id); 
@@ -232,17 +229,28 @@ router.post('/delete',async (req,res) =>{
 
 //RESTAR AL STOCK PRODUCTOS DESPUES DE COMPRAR 
 
-router.get('/buyShop', async (req,res) =>{    
-    const usuario=req.user;    
-    const totalShop= await ShopProduct.find();
-    let basket = totalShop.filter((shop) =>{             // Descargamos toda la cesta y filtramos por usuario
-        console.log(shop);                               // con filter creamos el nuevo array de productos        
-        if(shop.userId==usuario.id) {
-            return shop;
-        }
+router.post('/buyShop', async (req,res) =>{
+
+    //Creamos el usuario
+    const customer = await stripe.customers.create({
+        email: req.body.stripeEmail,
+        source: req.body.stripeToken
     });
-    const producto = await Product.find();    
-    basket.forEach(function (basket) {        
+    //Guardamos la orden de compra
+    const charge = await stripe.charges.create({
+        amount: Math.round(req.body.tot),                 //Cogemos el valor total pasado desde la vista de la cesta
+        currency: 'eur',
+        customer: customer.id,
+        description: ' '
+    });
+
+    const usuario=req.user;
+    const totalShop= await ShopProduct.find();
+    let basket = totalShop.filter((shop) =>{       // con filter creamos el nuevo array de productos
+        return shop;
+    });
+    const producto = await Product.find();
+    basket.forEach(function (basket) {
         var id=basket.productId;
         var unidades=basket.unit;
         var stock;
@@ -263,9 +271,10 @@ router.get('/buyShop', async (req,res) =>{
     });
     const date=Date();
     const SalesSchema = new salesSchema({
+        chargeId : charge.id,
         userId: req.user,
-        timestamp: date, 
-        products: basket       
+        timestamp: date,
+        products: basket
     });
     await SalesSchema.save();
     basket.forEach(function(basket){
@@ -276,11 +285,7 @@ router.get('/buyShop', async (req,res) =>{
         });
     });
     res.redirect('/');
-    
 });
-
-// FIN RESTAR STOCK 
-
-
+// FIN RESTAR STOCK
 
 module.exports = router;

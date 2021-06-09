@@ -46,23 +46,27 @@
  <% })%>
 </tbody>
 </table>
-  </div>
-<div class="card card-body">Total: <%= sum %> euros</div>
-<button type="button" id= "pay" class="btn btn-primary">Pagar</button>
 </div>
-<script>
-  const btnAddShop = document.querySelectorAll(".btn-secondary");
-  btnAddShop.forEach((addToCartButton) => {
-    //addToCartButton.addEventListener('click', addToCartClicked);
-    addToCartButton.addEventListener("click", () => {
-      //console.log("hello");
-      var id= document.getElementById('id').firstChild.data;
-      console.log(id);
-    });
-  });
-  var Pay= document.getElementById("pay");
-  Pay.addEventListener("click", function(){
-    alert("Compra realizada correctamente");
-    window.location.assign('/buyShop');    
-  })
+
+<form action="/buyShop" method="POST">
+<div id ="total" class="card card-body">Total: <%= sum %> euros<i class="fas fa-money-bill-alt"></i></div>
+<input type="hidden" name="tot" value="<%= sum*100 %> "/> <!--Enviar total en centimos a stripe-->
+<script
+src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+data-key="pk_test_51IxydJHlGzQbLeTpvcLZX6cxUDXgltjRxJQI1ghWw00r9Dn4had60RkAu6GwH7TbJcBGPv9sBBP5CZvwmaChEl7g00LYfOnVHs"
+data-email="<%= user.email%>"
+data-amount= "<%= sum*100 %>"
+data-name="CalRamon"
+data-description="Example Charge"
+data-image="/images/masia5.png"
+data-locale="auto"
+data-currency="eur">
 </script>
+<!--Ocultar el boton de stripe-->
+<script>
+document.getElementsByClassName('stripe-button-el')[0].style.display = 'none';
+</script>
+<button class="btn btn-primary btn-block">Pagar <i class="fas fa-shopping-cart"></i></button>
+</form>
+<!--<button type="button" id= "pay" class="btn btn-primary">Pagar <i class="fas fa-shopping-cart"></i></button>-->
+</div>

@@ -24,6 +24,7 @@ const salesSummary = new Schema({
 })
 
 const salesSchema = new Schema({
+    chargeId : String,
     userId: String,
     timestamp: Date,
     products: [salesProduct]   
