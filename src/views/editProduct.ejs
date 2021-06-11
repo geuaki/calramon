@@ -1,0 +1,50 @@
+<%- layout('layouts/main.ejs')%>
+
+<div class="col-md-5">
+    <div class="card">
+        <div class="card-body">
+            <form action="/edit/<%= product._id %>" method="post">
+                <div class="form-group">
+                    <input type="text" name="name" id="name" placeholder="Name" value="<%= product.name %>" class="form-control">
+                </div>
+                <div class="form-group">
+                    Measure in: <br>
+                    Kgs: <input type="radio" name="isKilogram" id="kilogram" value="true">
+                    Units: <input type="radio" name="isKilogram" id="unit" value="false">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="weight" id="weight" placeholder="weight" class="form-control">
+                </div> 
+                <div class="form-group">
+                    <input type="text" name="unit" id="unit" placeholder="unit" class="form-control">
+                </div> 
+                <div class="form-group">
+                    <input type="text" name="price" id="price" placeholder="Price" value="<%= product.price %>" class="form-control">
+                </div>
+                <div class="form-group">
+                    Categoria: <br>
+                    <select name="category" id="category" class="form-control">
+                        <option selected>Selecciona categoria</option>
+                        <option value="fruita">fruita</option>
+                        <option value="verdura">verdura</option>
+                        <option value="llegums">llegums</option>
+                        <option value="oli">oli</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="quantity" id="quantity" placeholder="Cantidad en stock" class="form-control">
+                </div>
+                <div class="form-group">
+                    <textarea  name="description" cols= 80 placeholder="Description" class="form-control"><%= product.description %></textarea>
+                </div>
+                <!-- <div class="form-group">
+                    <label for="image">Change image</label>
+                    <input type="file" name="image" class="form-control" value="<%= product.image %>">
+                </div> -->
+                <button type="submit" class="btn btn-primary btn-block">
+                    Save changes
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

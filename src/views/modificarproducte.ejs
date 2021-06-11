@@ -1,0 +1,80 @@
+<%- layout('layouts/main.ejs') %>
+
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <div class="card mt-4 text-center">
+            <div class="card-header">
+                <h3><%= product.name%></h3>
+            </div>
+            <div class="card-body">
+                <form action="/producte/updateone/<%= product.id %>?_method=PUT" method="POST">
+                    <input type="hidden" name="_method" value="PUT">
+                    <div class="form-group text-left">
+                        <label for="nom">Nom</label>
+                        <input type="text" name="name" value="<%= product.name %>"
+                        class="form-control">
+                    </div>
+                    <% if(product.weight > 0) { %>
+                        <div class="form-group text-left">
+                            <label for="pes">Pes</label>
+                            <input type="number" name="weight" value="<%= product.weight %>"
+                            class="form-control w-75">
+                        </div>
+                    <% } else { %>
+                        <div class="form-group text-left">
+                            <label for="unitat">Unitat</label>
+                            <input type="text" name="unit" value="<%= product.unit %>"
+                            class="form-control">
+                        </div>
+                    <% } %>
+                    <div class="form-group text-left">
+                        <label for="preu">Preu</label>
+                        <input type="number" name="price" value="<%= product.price %>"
+                        class="form-control">
+                    </div>
+                    <div class="form-group text-left">
+                        <label for="estoc">Estoc</label>
+                        <input type="number" name="quantity" value="<%= product.stock %>"
+                        class="form-control">
+                    </div>
+                    <div class="form-group text-left">
+                        <label for="categoria">Categoria</label>
+                        <select class="custom-select" aria-label="Default select example" name="category">
+                            <option selected><%= product.category %></option>
+                            <% if(product.category == "verdura") { %>
+                                <option value="fruita">fruita</option>
+                                <option value="llegums">llegums</option>
+                                <option value="oli">oli</option>
+                            <% } %>
+                            <% if(product.category == "fruita") { %>
+                                <option value="verdura">verdura</option>
+                                <option value="llegums">llegums</option>
+                                <option value="oli">oli</option>
+                            <% } %>
+                            <% if(product.category == "llegums") { %>
+                                <option value="verdura">verdura</option>
+                                <option value="fruita">fruita</option>
+                                <option value="oli">oli</option>
+                            <% } %>
+                            <% if(product.category == "oli") { %>
+                                <option value="verdura">verdura</option>
+                                <option value="fruita">fruita</option>
+                                <option value="llegums">llegums</option>
+                            <% } %>
+                          </select>
+                    </div>
+                    <div class="form-group text-left">
+                        <label for="descripcio">Descripció</label>
+                        <textarea type="text" name="description"
+                        class="form-control" rows="3"><%= product.description %></textarea>
+                    </div>
+                
+                    <div class="row d-flex justify-content-around mt-3">
+                        <button class="btn btn-primary mt-3" type="submit">Modificar Producte</button>
+                        <a href="" class="btn btn-danger mt-3">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
