@@ -12,7 +12,6 @@ module.exports.validate = (schema, validation) => {
 
         if (result.error) {
             const errorDetails = result.error.details.map((value) => value.message);
-            alert(errorDetails);
             const responseObj = {
                 status: 400,
                 body: errorDetails
