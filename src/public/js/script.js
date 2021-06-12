@@ -23,9 +23,5 @@ $("input[type=radio][name=quant]").change(function () {
       document.getElementById("navbarNav1").classList.remove("show");
     }
   });
-<<<<<<< HEAD
-});
-=======
 });
   
->>>>>>> 8f2bcf9fcb00440e99f04fc9fc7085b2b8342338
